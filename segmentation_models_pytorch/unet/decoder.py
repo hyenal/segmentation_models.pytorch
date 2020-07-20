@@ -71,6 +71,7 @@ class UnetDecoder(nn.Module):
             use_batchnorm=True,
             attention_type=None,
             center=False,
+            full=False
     ):
         super().__init__()
 
@@ -86,8 +87,9 @@ class UnetDecoder(nn.Module):
 
         # computing blocks input and output channels
         head_channels = encoder_channels[0]
-        in_channels = [head_channels] + list(decoder_channels[:-1])
+        in_channels = [(1+int(full))*head_channels] + list(decoder_channels[:-1])
         skip_channels = list(encoder_channels[1:]) + [0]
+        skip_channels[0] *= (1+int(full))
         out_channels = decoder_channels
 
         if center:
